@@ -1,0 +1,136 @@
+<html>
+<head>
+	<style type="text/css">
+
+		.item1 { grid-area: header; }
+		.item2 { grid-area: menu; }
+		.item3 { grid-area: main; }
+		.item4 { grid-area: settings; }
+		.item5 { grid-area: footer; }
+		.grid-container {
+		  display: grid;
+		  grid-template-areas:
+		    'header header header header header header'
+		    'menu main main main main settings'
+		    'menu footer footer footer footer settings';
+		  grid-gap: 10px;
+		  background-color: #fff;
+		  padding: 10px;
+		}
+	</style>
+</head>
+<body>
+
+		<div class="grid-container">
+		  <div class="item1">Idle Sinner</div>
+		  <div class="item2" id="sinsButtons">
+				<button onclick="clickForSin('lust')" id="lustButton" name="lustButton">lust</button> <label for="lustButton" id="lustLabel"></label><br />
+				<button onclick="clickForSin('gluttony')" id="gluttonyButton" name="gluttonyButton">gluttony</button> <label for="gluttonyButton" id="gluttonyLabel"></label><br />
+				<button onclick="clickForSin('avarice')" id="avariceButton" name="avariceButton">avarice</button> <label for="avariceButton" id="avariceLabel"></label><br />
+				<button onclick="clickForSin('sloth')" id="slothButton" name="slothButton">sloth</button> <label for="slothButton" id="slothLabel"></label><br />
+				<button onclick="clickForSin('wrath')" id="wrathButton" name="wrathButton">wrath</button> <label for="wrathButton" id="wrathLabel"></label><br />
+				<button onclick="clickForSin('envy')" id="envyButton" name="envyButton">envy</button> <label for="envyButton" id="envyLabel"></label><br />
+				<button onclick="clickForSin('pride')" id="prideButton" name="prideButton">pride</button> <label for="prideButton" id="prideLabel"></label><br />
+		  </div>
+		  <div class="item3">
+		  	<img src='Earth.svg' height=250 />
+
+			<div>
+				<span id="points"></span>
+				<button onclick="clickForPoints()">click me</button>
+			</div>
+		  </div>  
+		  <div class="item4">Settings</div>
+		  <div class="item5">Footer</div>
+		</div>
+
+
+	<script>
+
+    //base stats for games
+    var state = {
+    	sins: {
+	    	lust: {
+	    		value: 0,
+	    		cost: 10,
+	    	},
+	    	gluttony: {
+	    		value: 0,
+	    		cost: 100,
+	    	},
+	    	avarice: {
+	    		value: 0,
+	    		cost: 1000,
+	    	},
+	    	sloth: {
+	    		value: 0,
+	    		cost: 10000,
+	    	},
+	    	wrath: {
+	    		value: 0,
+	    		cost: 100000,
+	    	},
+	    	envy: {
+	    		value: 0,
+	    		cost: 1000000,
+	    	},
+	    	pride: {
+	    		value: 0,
+	    		cost: 10000000,
+	    	},
+	    },
+    	points: 0.0,
+
+    }
+    draw();
+
+    //button actions
+    function clickForPoints() {
+    	state.points++;
+    	draw();
+    }
+    function clickForSin(sin) {
+    	if(state.points >= state.sins[sin].cost) {
+    		state.points -= state.sins[sin].cost;
+    		state.sins[sin].value++;
+    	}
+    }
+
+    //base game functions and loop
+    function update() {
+    	state.points += state.sins.lust.value * .000001;
+    }
+
+    function draw() {
+    	//take care of sin general items (labels and buttons)
+    	for (var key in state.sins) {
+    		//check button for enabling
+    		var disabling = true;
+	    	if(state.points >= state.sins[key].cost) {
+	    		disabling = false;
+	    	}
+	    	document.getElementById(key+'Button').disabled = disabling;
+	    	//update value of buttons
+	    	document.getElementById(key+'Label').innerHTML = state.sins[key].value;
+		}
+    	//take care of general elements
+    	document.getElementById('points').innerHTML = state.points.toFixed(6);
+
+    }
+
+    function gameLoop(timestamp) {
+    	var progress = timestamp - lastrender;
+
+    	update();
+
+    	draw();
+
+    	lastrender = timestamp;
+    	window.requestAnimationFrame(gameLoop);
+    }
+    var lastrender = 0;
+    window.requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>
+
