@@ -14,9 +14,13 @@
 		    'menu main main main main settings'
 		    'menu footer footer footer footer settings';
 		  grid-gap: 10px;
-		  background-color: #fff;
+		  background-color: #000;
+          color: #fff;
 		  padding: 10px;
 		}
+        #earth {
+            filter: invert(100%);
+        }
 	</style>
 </head>
 <body>
@@ -33,7 +37,7 @@
 				<button onclick="clickForSin('pride')" id="prideButton" name="prideButton">pride</button> <label for="prideButton" id="prideLabel"></label><br />
 		  </div>
 		  <div class="item3">
-		  	<img src='Earth.svg' height=250 />
+		  	<img src='Earth.svg' height=250 id="earth" />
 
 			<div>
 				<span id="points"></span>
@@ -45,9 +49,8 @@
 		</div>
 
 
-	<script>
-
-    //base stats for games
+        <script>
+//base stats for games
     var state = {
     	sins: {
 	    	lust: {
@@ -58,15 +61,15 @@
 	    		value: 0,
 	    		cost: 100,
 	    	},
+            wrath: {
+                value: 0,
+                cost: 1000,
+            },
 	    	avarice: {
-	    		value: 0,
-	    		cost: 1000,
-	    	},
-	    	sloth: {
 	    		value: 0,
 	    		cost: 10000,
 	    	},
-	    	wrath: {
+	    	sloth: {
 	    		value: 0,
 	    		cost: 100000,
 	    	},
@@ -86,7 +89,7 @@
 
     //button actions
     function clickForPoints() {
-    	state.points++;
+    	state.points = state.points + 1 + state.sins.wrath.value / 10;
     	draw();
     }
     function clickForSin(sin) {
@@ -98,7 +101,7 @@
 
     //base game functions and loop
     function update() {
-    	state.points += state.sins.lust.value * .000001;
+    	state.points += state.sins.lust.value * .00001;
     }
 
     function draw() {
@@ -114,7 +117,7 @@
 	    	document.getElementById(key+'Label').innerHTML = state.sins[key].value;
 		}
     	//take care of general elements
-    	document.getElementById('points').innerHTML = state.points.toFixed(6);
+    	document.getElementById('points').innerHTML = state.points.toFixed(5);
 
     }
 
@@ -129,8 +132,7 @@
     	window.requestAnimationFrame(gameLoop);
     }
     var lastrender = 0;
-    window.requestAnimationFrame(gameLoop);
-</script>
+    window.requestAnimationFrame(gameLoop);</script>
 </body>
 </html>
 
